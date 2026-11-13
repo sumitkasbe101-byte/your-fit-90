@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101812">
+<title>YOUR FIT 90</title>
+<style>
+:root{--bg:#0c120e;--panel:#17221a;--panel2:#202e24;--green:#9be3a5;--muted:#a8b6ab;--line:#304136;--white:#f4f7f4}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--white);font:15px system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:22px 18px 16px;background:linear-gradient(140deg,#17271c,#0c120e);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:3}
+.brand{display:flex;justify-content:space-between;align-items:center}.brand b{font-size:20px;letter-spacing:1.4px}.brand span{color:var(--green);font-size:12px}
+h1{font-size:25px;margin:17px 0 4px}header p{color:var(--muted);margin:0;font-size:13px}
+nav{display:flex;gap:8px;overflow:auto;padding:12px 14px;background:#101812;position:sticky;top:104px;z-index:2}
+nav button{white-space:nowrap;background:var(--panel);color:var(--muted);border:1px solid var(--line);border-radius:22px;padding:9px 13px}
+nav button.active{background:var(--green);color:#102015;border-color:var(--green);font-weight:700}
+main{padding:14px;max-width:760px;margin:auto}.tab{display:none}.tab.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+.kicker{font-size:12px;color:var(--muted)}.value{font-size:24px;font-weight:750;margin:4px 0}.unit{font-size:12px;color:var(--muted)}
+h2{font-size:18px;margin:4px 0 12px}h3{font-size:14px;margin:0 0 8px;color:var(--green)}
+button,.btn{cursor:pointer}button.primary,.primary{background:var(--green);color:#102015;border:0;border-radius:11px;padding:11px 14px;font-weight:700}
+button.secondary{background:var(--panel2);color:var(--white);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+input,select,textarea{width:100%;padding:11px;background:#0d1510;color:var(--white);border:1px solid var(--line);border-radius:10px;margin:5px 0 12px;font:inherit}
+label{display:block;color:var(--muted);font-size:12px;margin-top:7px}
+.row{display:flex;gap:8px;align-items:center}.row>*{flex:1}.progress{height:8px;background:#304136;border-radius:8px;overflow:hidden;margin:8px 0}.progress i{display:block;height:100%;background:var(--green);width:0}
+.small{font-size:12px;color:var(--muted);line-height:1.5}.entry{padding:10px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px}.entry:last-child{border:0}
+.photo{width:100%;max-height:190px;object-fit:cover;border-radius:10px;display:none;margin:5px 0 10px}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
+@media(min-width:600px){main{padding:22px}.value{font-size:28px}}
+</style>
+</head>
+<body>
+<header><div class="brand"><b>YOUR FIT 90</b><span>MY BODY · MY RULES</span></div><h1>Today’s Progress</h1><p>Personal fitness tracker · 90-day journey</p></header>
+<nav>
+<button class="active" data-tab="home">Home</button><button data-tab="food">Food & Protein</button><button data-tab="workout">Workout</button><button data-tab="activity">Steps & Water</button><button data-tab="progress">Body Progress</button>
+</nav>
+<main>
+<section id="home" class="tab active">
+<div class="grid">
+<div class="card"><div class="kicker">Calories eaten</div><div class="value" id="homeCal">0</div><div class="unit">kcal today</div></div>
+<div class="card"><div class="kicker">Protein</div><div class="value" id="homeProtein">0 g</div><div class="unit" id="proteinGoalText">Goal: 120 g</div><div class="progress"><i id="proteinBar"></i></div></div>
+<div class="card"><div class="kicker">Steps</div><div class="value" id="homeSteps">0</div><div class="unit">Goal: 8,000</div><div class="progress"><i id="stepsBar"></i></div></div>
+<div class="card"><div class="kicker">Water</div><div class="value" id="homeWater">0 ml</div><div class="unit">Goal: 2,500 ml</div><div class="progress"><i id="waterBar"></i></div></div>
+</div>
+<div class="card"><h2>Quick actions</h2><div class="row"><button class="primary" onclick="showTab('food')">＋ Add food</button><button class="secondary" onclick="showTab('workout')">＋ Workout</button></div><div class="row" style="margin-top:8px"><button class="secondary" onclick="addWater(250)">＋ 250 ml water</button><button class="secondary" onclick="showTab('activity')">Add steps</button></div></div>
+<div class="card"><h2>Today’s summary</h2><div id="todaySummary" class="small">Your daily records will appear here.</div></div>
+<div class="small">Note: Food nutrition is an estimate. Weighing portions and checking package labels improves accuracy. Step count is entered manually in this starter version.</div>
+</section>
+<section id="food" class="tab">
+<div class="card"><h2>📸 Food photo & nutrition</h2><p class="small">Choose a meal photo, then select the food and portion. This starter version does not automatically recognize food from the image.</p>
+<label>Meal photo (optional)</label><input type="file" id="foodPhoto" accept="image/*" capture="environment"><img id="photoPreview" class="photo" alt="Meal preview">
+<label>Food item</label><select id="foodSelect"><option value="">Choose Indian food</option></select>
+<div class="row"><div><label>Portion / servings</label><input id="foodQty" type="number" min="0.25" step="0.25" value="1"></div><div><label>Meal</label><select id="meal"><option>Breakfast</option><option>Lunch</option><option>Snack</option><option>Dinner</option></select></div></div>
+<div id="foodInfo" class="small">Select a food to see estimated nutrition.</div><button class="primary" onclick="addFood()">Add to today</button></div>
+<div class="card"><h2>Food log</h2><div id="foodLog" class="small">No food added yet.</div></div>
+</section>
+<section id="workout" class="tab">
+<div class="card"><h2>💪 Log workout</h2><label>Exercise</label><select id="exercise"><option>Push-ups</option><option>Squats</option><option>Plank</option><option>Lunges</option><option>Crunches</option><option>Walking</option><option>Yoga / Mobility</option><option>Other</option></select>
+<div class="row"><div><label>Reps / minutes</label><input id="workAmount" type="number" min="1" value="10"></div><div><label>Sets</label><input id="workSets" type="number" min="1" value="3"></div></div><label>Notes (optional)</label><input id="workNote" placeholder="e.g. easy / medium / hard"><button class="primary" onclick="addWorkout()">Save workout</button></div>
+<div class="card"><h2>Workout history today</h2><div id="workLog" class="small">No workout logged yet.</div></div>
+</section>
+<section id="activity" class="tab">
+<div class="card"><h2>👟 Steps</h2><label>Steps today (read from your phone’s step counter)</label><input id="stepsInput" type="number" min="0" placeholder="e.g. 6500"><button class="primary" onclick="saveSteps()">Save steps</button><p class="small">Automatic background step counting needs a native Android/Health Connect integration; this starter web app uses manual entry.</p></div>
+<div class="card"><h2>💧 Water tracker</h2><div class="value" id="waterTotal">0 ml</div><div class="row"><button class="primary" onclick="addWater(250)">＋ 250 ml</button><button class="secondary" onclick="addWater(500)">＋ 500 ml</button><button class="secondary" onclick="addWater(750)">＋ 750 ml</button></div><p class="small">Tap once for each glass/bottle you drink.</p></div>
+</section>
+<section id="progress" class="tab">
+<div class="card"><h2>📈 Body measurements</h2><div class="row"><div><label>Weight (kg)</label><input id="weightInput" type="number" step="0.1" placeholder="e.g. 72"></div><div><label>Waist (inches)</label><input id="waistInput" type="number" step="0.1" placeholder="e.g. 37.5"></div></div><button class="primary" onclick="saveBody()">Save today’s measurements</button><div id="bodyLog" class="small" style="margin-top:12px">No measurements saved yet.</div></div>
+<div class="card"><h2>🎯 Daily targets</h2><div class="row"><div><label>Protein goal (g)</label><input id="proteinGoal" type="number" value="120"></div><div><label>Steps goal</label><input id="stepGoal" type="number" value="8000"></div></div><div class="row"><div><label>Water goal (ml)</label><input id="waterGoal" type="number" value="2500"></div><div><label>Calorie goal (kcal)</label><input id="calGoal" type="number" value="2000"></div></div><button class="primary" onclick="saveGoals()">Save targets</button></div>
+<div class="card"><h2>Data & privacy</h2><p class="small">Records are stored in this browser on this phone. Clearing browser data may erase them. This public code repository contains the app code, not your personal health logs. Export a backup regularly.</p><button class="secondary" onclick="exportData()">Download my data backup</button> <button class="secondary" onclick="resetData()">Reset app data</button></div>
+</section>
+</main><footer>YOUR FIT 90 · Personal use · Estimates are not medical advice</footer>
+<script>
+const foods=[
+["Boiled egg (1)",78,6.3,0.6,5.3],["Milk (250 ml)",150,8,12,8],["Paneer (100 g)",265,18,4,20],["Curd / dahi (100 g)",61,3.5,4.7,3.3],
+["Cooked dal (1 bowl / 150 g)",180,11,27,4],["Cooked chana (100 g)",164,8.9,27,2.6],["Rajma (1 bowl / 150 g)",190,12,32,1],["Cooked rice (1 cup)",205,4.3,45,0.4],["Roti (1 medium)",110,3.5,22,1.5],["Poha (1 plate)",250,5,45,6],["Upma (1 bowl)",220,6,35,7],["Idli (2 pieces)",130,4,27,0.5],["Plain dosa (1)",168,4,29,3.7],["Chicken breast cooked (100 g)",165,31,0,3.6],["Fish cooked (100 g)",150,26,0,5],["Soy chunks dry (30 g)",104,15.6,10,0.2],["Peanuts (30 g)",170,7.7,4.8,14],["Banana (1 medium)",105,1.3,27,0.4],["Apple (1 medium)",95,0.5,25,0.3],["Sprouts (1 bowl)",100,7,18,1]];
+let db=JSON.parse(localStorage.getItem("fit90data")||'{"days":{},"body":[],"goals":{"protein":120,"steps":8000,"water":2500,"cal":2000}}');
+const today=()=>new Date().toISOString().slice(0,10);function day(){db.days[today()]??={foods:[],workouts:[],water:0,steps:0};return db.days[today()]}
+function save(){localStorage.setItem("fit90data",JSON.stringify(db));render()}
+function showTab(id){document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.id===id));document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x.dataset.tab===id));window.scrollTo(0,0)}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+const fmt=n=>Math.round(n*10)/10;function totals(){let d=day();return d.foods.reduce((a,f)=>({cal:a.cal+f.cal,protein:a.protein+f.protein}),{cal:0,protein:0})}
+function render(){let d=day(),t=totals(),g=db.goals;document.getElementById("homeCal").textContent=fmt(t.cal);document.getElementById("homeProtein").textContent=fmt(t.protein)+" g";document.getElementById("proteinGoalText").textContent="Goal: "+g.protein+" g";document.getElementById("proteinBar").style.width=Math.min(100,t.protein/g.protein*100)+"%";document.getElementById("homeSteps").textContent=d.steps.toLocaleString("en-IN");document.getElementById("stepsBar").style.width=Math.min(100,d.steps/g.steps*100)+"%";document.getElementById("homeWater").textContent=d.water+" ml";document.getElementById("waterBar").style.width=Math.min(100,d.water/g.water*100)+"%";document.getElementById("waterTotal").textContent=d.water+" ml";
+document.getElementById("foodLog").innerHTML=d.foods.length?d.foods.map(f=>`<div class="entry"><span>${esc(f.meal)} · ${esc(f.name)} × ${f.qty}</span><b>${fmt(f.protein)}g P · ${fmt(f.cal)} kcal</b></div>`).join(""):"No food added yet.";document.getElementById("workLog").innerHTML=d.workouts.length?d.workouts.map(w=>`<div class="entry"><span>${esc(w.name)} · ${w.amount} × ${w.sets} sets ${w.note?"· "+esc(w.note):""}</span><b>Saved</b></div>`).join(""):"No workout logged yet.";
+document.getElementById("todaySummary").textContent=`${d.foods.length} food entries · ${d.workouts.length} workouts · ${d.steps.toLocaleString("en-IN")} steps · ${d.water} ml water`;
+document.getElementById("bodyLog").innerHTML=db.body.length?db.body.slice().reverse().map(x=>`<div class="entry"><span>${x.date}</span><b>${x.weight} kg · ${x.waist} in</b></div>`).join(""):"No measurements saved yet.";
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+const sel=document.getElementById("foodSelect");foods.forEach((f,i)=>{let o=document.createElement("option");o.value=i;o.textContent=f[0];sel.appendChild(o)});
+function foodPreview(){let f=foods[+sel.value],q=+document.getElementById("foodQty").value||1;document.getElementById("foodInfo").textContent=f?`Approx. ${fmt(f[1]*q)} kcal · Protein ${fmt(f[2]*q)} g · Carbs ${fmt(f[3]*q)} g · Fat ${fmt(f[4]*q)} g per selected portion.`:"Select a food to see estimated nutrition."}sel.onchange=foodPreview;document.getElementById("foodQty").oninput=foodPreview;
+document.getElementById("foodPhoto").onchange=e=>{let file=e.target.files[0],img=document.getElementById("photoPreview");if(file){img.src=URL.createObjectURL(file);img.style.display="block"}};
+function addFood(){let f=foods[+sel.value],q=+document.getElementById("foodQty").value;if(!f||!(q>0)){alert("Choose a food and valid portion.");return}day().foods.push({name:f[0],qty:q,meal:document.getElementById("meal").value,cal:f[1]*q,protein:f[2]*q});save();alert("Food added. Nutrition is an estimate.");}
+function addWorkout(){let amount=+document.getElementById("workAmount").value,sets=+document.getElementById("workSets").value;if(!(amount>0&&sets>0))return alert("Enter valid amount and sets.");day().workouts.push({name:document.getElementById("exercise").value,amount,sets,note:document.getElementById("workNote").value});save();alert("Workout saved.");}
+function saveSteps(){let v=+document.getElementById("stepsInput").value;if(v<0)return;day().steps=v;save();alert("Steps saved.");}
+function addWater(n){day().water+=n;save()}
+function saveBody(){let w=+document.getElementById("weightInput").value,z=+document.getElementById("waistInput").value;if(!(w>0&&z>0))return alert("Enter both weight and waist.");db.body.push({date:today(),weight:w,waist:z});save();alert("Measurements saved.");}
+function saveGoals(){db.goals={protein:+proteinGoal.value||120,steps:+stepGoal.value||8000,water:+waterGoal.value||2500,cal:+calGoal.value||2000};save();alert("Targets saved.");}
+function exportData(){let blob=new Blob([JSON.stringify(db,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="your-fit-90-backup.json";a.click();URL.revokeObjectURL(a.href)}
+function resetData(){if(confirm("Delete all records on this phone? This cannot be undone.")){localStorage.removeItem("fit90data");location.reload()}}
+render();
+</script></body></html>
